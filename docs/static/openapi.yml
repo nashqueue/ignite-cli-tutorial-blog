@@ -30806,6 +30806,8 @@ definitions:
       createdAt:
         type: string
         format: int64
+  blog.blog.MsgCreateCommentResponse:
+    type: object
   blog.blog.MsgCreatePostResponse:
     type: object
     properties:
