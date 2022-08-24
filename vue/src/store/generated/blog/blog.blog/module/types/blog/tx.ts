@@ -8,6 +8,7 @@ export interface MsgCreatePost {
   creator: string;
   title: string;
   body: string;
+  id: number;
 }
 
 export interface MsgCreatePostResponse {
@@ -26,7 +27,7 @@ export interface MsgCreateCommentResponse {
   id: number;
 }
 
-const baseMsgCreatePost: object = { creator: "", title: "", body: "" };
+const baseMsgCreatePost: object = { creator: "", title: "", body: "", id: 0 };
 
 export const MsgCreatePost = {
   encode(message: MsgCreatePost, writer: Writer = Writer.create()): Writer {
@@ -38,6 +39,9 @@ export const MsgCreatePost = {
     }
     if (message.body !== "") {
       writer.uint32(26).string(message.body);
+    }
+    if (message.id !== 0) {
+      writer.uint32(32).uint64(message.id);
     }
     return writer;
   },
@@ -57,6 +61,9 @@ export const MsgCreatePost = {
           break;
         case 3:
           message.body = reader.string();
+          break;
+        case 4:
+          message.id = longToNumber(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -83,6 +90,11 @@ export const MsgCreatePost = {
     } else {
       message.body = "";
     }
+    if (object.id !== undefined && object.id !== null) {
+      message.id = Number(object.id);
+    } else {
+      message.id = 0;
+    }
     return message;
   },
 
@@ -91,6 +103,7 @@ export const MsgCreatePost = {
     message.creator !== undefined && (obj.creator = message.creator);
     message.title !== undefined && (obj.title = message.title);
     message.body !== undefined && (obj.body = message.body);
+    message.id !== undefined && (obj.id = message.id);
     return obj;
   },
 
@@ -110,6 +123,11 @@ export const MsgCreatePost = {
       message.body = object.body;
     } else {
       message.body = "";
+    }
+    if (object.id !== undefined && object.id !== null) {
+      message.id = object.id;
+    } else {
+      message.id = 0;
     }
     return message;
   },
